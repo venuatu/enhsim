@@ -110,6 +110,9 @@ import GearPage from "./GearPage.vue";
 <template>
   <div class="row" id="window">
     <div class="" id="leftsidebar">
+      <p class="loading" v-if="stats.processing || Queue.processing.value">
+        <va-icon name="loop" spin size="50" />
+      </p>
       <va-alert
         >DPS: {{ stats.dps }} σ {{ stats.dpsStd }} ({{ stats.dpsMin }}-{{
           stats.dpsMax
@@ -145,10 +148,14 @@ va-card {
 }
 .cen {
   text-align: center;
-}
-.card,
-.cen {
   padding: 0.25rem;
+}
+.loading {
+  background-color: black;
+  text-align: center;
+}
+.loading i {
+  font-size: 48px;
 }
 #leftsidebar {
   position: fixed;

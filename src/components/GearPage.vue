@@ -164,34 +164,34 @@ populateGear().then(() => {
       </template>
     </va-tabs>
     <transition-group name="flip-list" tag="table" class="va-table">
-      <tbody>
-        <tr key="header">
-          <th>Name</th>
-          <th v-for="x in props">{{ x.name }}</th>
-          <th>DPS</th>
-          <th>Δ</th>
-        </tr>
-        <tr
-          v-for="r in data"
-          :key="r.id"
-          :class="{ selected: selectedGear[tab - 1] === r.id }"
-        >
-          <td class="name">
-            <a :href="'https://tbc.wowhead.com/item=' + r.id" target="_blank">{{
-              r.name
-            }}</a>
-          </td>
-          <td v-for="x in props" @click="rundps(r.id)">{{ r[x.prop] }}</td>
-          <td class="dps" @click="rundps(r.id)">
-            {{ (dpsRankings[`${tab}${r.id}`] || 0).toFixed(0) }}
-          </td>
-          <td>
-            {{ ((dpsRankings[`${tab}${r.id}`] || 0) - selectedDps).toFixed(2) }}
-          </td>
-        </tr>
-      </tbody>
+      <tr key="header">
+        <th>Name</th>
+        <th v-for="x in props">{{ x.name }}</th>
+        <th>DPS</th>
+        <th>Δ</th>
+      </tr>
+      <tr
+        v-for="r in data"
+        :key="r.id"
+        :class="{ selected: selectedGear[tab - 1] === r.id }"
+      >
+        <td class="name">
+          <a :href="'https://tbc.wowhead.com/item=' + r.id" target="_blank">{{
+            r.name
+          }}</a>
+        </td>
+        <td v-for="x in props" @click="rundps(r.id)">{{ r[x.prop] }}</td>
+        <td class="dps" @click="rundps(r.id)">
+          {{ (dpsRankings[`${tab}${r.id}`] || 0).toFixed(0) }}
+        </td>
+        <td>
+          {{ ((dpsRankings[`${tab}${r.id}`] || 0) - selectedDps).toFixed(2) }}
+        </td>
+      </tr>
     </transition-group>
-    <va-button @click="sheetdps()">Sheet DPS</va-button>
+    <p class="btns">
+      <va-button @click="sheetdps()">Sheet DPS</va-button>
+    </p>
     <!-- <va-alert></va-alert> -->
   </div>
 </template>
@@ -217,6 +217,10 @@ va-card {
 .dps {
   font-weight: bold;
   color: rgb(204, 204, 204);
+}
+.btns {
+  text-align: center;
+  padding-bottom: 1em;
 }
 .selected,
 .selected > td {

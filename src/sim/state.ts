@@ -26,7 +26,6 @@ import Buff, {
   Talents,
   UnleashedRage,
 } from "./buff";
-import { SelectedGems } from "./gems";
 import Hit, { Schools } from "./hit";
 import Item, { gearById } from "./item";
 import { isWorker, setBonuses } from "./utils";

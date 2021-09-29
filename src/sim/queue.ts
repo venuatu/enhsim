@@ -21,6 +21,7 @@ class TaskQueue {
   workers: Array<Worker> = [];
   queue: Array<object> = [];
   active: boolean = false;
+  processing = ref(false);
   activeTasks: Record<string, object> = {};
 
   cores: number = navigator.hardwareConcurrency * 0.75;
@@ -48,6 +49,7 @@ class TaskQueue {
   push(e: Request) {
     this.ensureWorkers();
     e.flags = this.flags;
+    this.processing.value = true;
     return new Promise((resolve, reject) => {
       this.queue.push([e, resolve, reject]);
     });
@@ -81,6 +83,7 @@ class TaskQueue {
         this.activeTasks[worker._id][2](new Error("lost task"));
       }
       if (!this.queue.length) {
+        this.processing.value = false;
         return;
       }
       let msg = this.queue.pop();
