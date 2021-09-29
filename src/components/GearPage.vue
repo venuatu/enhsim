@@ -156,15 +156,15 @@ populateGear().then(() => {
 
 <template>
   <div>
-    <va-card color="background" class="card">
-      <va-tabs v-model="tab">
-        <template #tabs>
-          <va-tab v-for="(f, i) in filters" :name="i + 1" :key="f.name">
-            {{ f.name }}
-          </va-tab>
-        </template>
-      </va-tabs>
-      <transition-group name="flip-list" tag="table" class="va-table">
+    <va-tabs v-model="tab">
+      <template #tabs>
+        <va-tab v-for="(f, i) in filters" :name="i + 1" :key="f.name">
+          {{ f.name }}
+        </va-tab>
+      </template>
+    </va-tabs>
+    <transition-group name="flip-list" tag="table" class="va-table">
+      <tbody>
         <tr key="header">
           <th>Name</th>
           <th v-for="x in props">{{ x.name }}</th>
@@ -189,9 +189,9 @@ populateGear().then(() => {
             {{ ((dpsRankings[`${tab}${r.id}`] || 0) - selectedDps).toFixed(2) }}
           </td>
         </tr>
-      </transition-group>
-      <va-button @click="sheetdps()">Sheet DPS</va-button>
-    </va-card>
+      </tbody>
+    </transition-group>
+    <va-button @click="sheetdps()">Sheet DPS</va-button>
     <!-- <va-alert></va-alert> -->
   </div>
 </template>
@@ -222,8 +222,17 @@ va-card {
 .selected > td {
   background-color: rgba(167, 247, 47, 0.1);
 }
+tr {
+  min-width: 100%;
+}
 th {
   color: white !important;
+}
+td {
+  cursor: grab;
+}
+td a {
+  cursor: pointer;
 }
 tr:hover {
   background-color: rgba(0, 255, 255, 0.1);

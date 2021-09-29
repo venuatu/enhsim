@@ -4,11 +4,6 @@ import State from "../sim/state";
 import { gearById, populateGear } from "../sim/item";
 
 let stats = reactive({
-  attackPower: 0,
-  hitChance: 0,
-  critPct: 0,
-  meleeHaste: 0,
-  armor: 0,
   dps: 0,
   dpsMax: 0,
   dpsMin: 0,
@@ -16,6 +11,7 @@ let stats = reactive({
   durs: 0,
   runs: 0,
   lastReport: {},
+  gemReport: null,
   processing: true,
 });
 
@@ -53,16 +49,7 @@ function dps(runs) {
       gear: getGear(),
     },
   }).then(function (reps) {
-    let state = new State();
-    state.gear = getGear();
-    state.run();
-
     stats.processing = false;
-    stats.attackPower = state.stats.statAttackPower;
-    stats.hitChance = state.stats.statHit * 100;
-    stats.critPct = state.stats.statCrit * 100;
-    stats.meleeHaste = state.stats.statHaste * 100;
-    stats.armor = state.stats.statArmorPen;
     stats.dps = chain(reps).map("dps").mean().value().toFixed(2);
     stats.dpsMin = chain(reps).map("dps").min().value().toFixed(0);
     stats.dpsMax = chain(reps).map("dps").max().value().toFixed(0);
@@ -96,7 +83,7 @@ function statValues(runs) {
     p.then(function (reps) {
       let dps = chain(reps).map("dps").mean().value();
       statReport[gem.name] = (dps - stats.dps) / N;
-      Queue.lastReport.value = chain(statReport)
+      stats.gemReport = chain(statReport)
         .map((v, k) => ({ n: k, v: v }))
         .sortBy("v")
         .reverse()
@@ -122,42 +109,28 @@ import GearPage from "./GearPage.vue";
 
 <template>
   <div class="row" id="window">
-    <div class="flex" id="leftsidebar">
-      <va-card color="background" class="card">
-        <va-alert> Attack Power: {{ stats.attackPower.toFixed(0) }} </va-alert>
-        <va-alert> Hit: {{ stats.hitChance.toFixed(2) }}% </va-alert>
-        <va-alert> Crit: {{ stats.critPct.toFixed(2) }}% </va-alert>
-        <va-alert> Haste: {{ stats.meleeHaste.toFixed(0) }}% </va-alert>
-        <va-alert> Armor Penetration: {{ stats.armor }} </va-alert>
-        <!-- <va-divider />
-        <va-alert>
-          stats: {{ ostats }}
-        </va-alert> -->
-
-        <va-inner-loading :loading="stats.processing">
-          <va-alert
-            >DPS: {{ stats.dps }} σ {{ stats.dpsStd }} ({{ stats.dpsMin }}-{{
-              stats.dpsMax
-            }})</va-alert
-          >
-          <va-alert
-            >Runs: {{ stats.runs }} @ {{ stats.durs.toFixed(2) }}ms</va-alert
-          >
-          <va-alert>
-            <pre>{{ Queue.lastReport.value }}</pre>
-          </va-alert>
-          <p class="flex cen"><va-button @click="dps(runs)">DPS</va-button></p>
-          <p class="flex cen">
-            <va-button @click="statValues()">Gem Weights</va-button>
-          </p>
-          <!-- <p class="flex cen"><va-button @click="sheet()">Sheet DPS</va-button></p> -->
-        </va-inner-loading>
-
-        <!-- <p class="flex cen"><va-button @click="stats()">Stats</va-button></p> -->
-        <p class="flex cen">
-          <va-button @click="settings()">Settings</va-button>
-        </p>
-      </va-card>
+    <div class="" id="leftsidebar">
+      <va-alert
+        >DPS: {{ stats.dps }} σ {{ stats.dpsStd }} ({{ stats.dpsMin }}-{{
+          stats.dpsMax
+        }})</va-alert
+      >
+      <va-alert
+        >Runs: {{ stats.runs }} @ {{ stats.durs.toFixed(2) }}ms</va-alert
+      >
+      <va-alert>
+        <pre>{{ Queue.lastReport.value }}</pre>
+      </va-alert>
+      <va-alert v-if="stats.gemReport">
+        <pre>{{ stats.gemReport }}</pre>
+      </va-alert>
+      <p class="flex cen"><va-button @click="dps(runs)">DPS</va-button></p>
+      <p class="flex cen">
+        <va-button @click="statValues()">Gem Weights</va-button>
+      </p>
+      <p class="flex cen">
+        <va-button @click="settings()">Settings</va-button>
+      </p>
     </div>
     <GearPage class="flex" id="rightcontent"></GearPage>
   </div>
@@ -167,7 +140,6 @@ import GearPage from "./GearPage.vue";
 a {
   color: #42b983;
 }
-
 va-card {
   padding: 0.75rem;
 }
@@ -179,32 +151,36 @@ va-card {
   padding: 0.25rem;
 }
 #leftsidebar {
-  /* width: 20%; */
-  height: 100%;
-  /* width: 20em; */
-  overflow-y: auto;
-  flex-basis: content;
-  display: flex;
-}
-#rightcontent {
-  flex-grow: 10;
-  overflow: auto;
-  height: 100%;
-}
-#window,
-#app {
   position: fixed;
   left: 0;
   top: 0;
   right: 0;
+  width: 20%;
+  width: max(20em, 20%);
+  height: 100%;
+  overflow-y: auto;
+  border-right: 0.1rem solid black;
+}
+#rightcontent {
+  position: fixed;
+  top: 0;
+  right: 0;
   bottom: 0;
-  display: flex;
+  overflow-y: auto;
+  height: 100%;
+  width: 20%;
+  width: min(calc(100% - 20em), 80%);
+}
+#window,
+#app {
 }
 * {
   word-wrap: break-word;
 }
 pre {
+  width: 20em;
   word-wrap: break-word;
   font-size: 10pt;
+  overflow: hidden;
 }
 </style>

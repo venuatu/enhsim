@@ -13,7 +13,7 @@ import HelloWorld from "./components/HelloWorld.vue";
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
 body {
-  background-color: #0f0e17;
+  background-color: rgb(0, 70, 67);
 }
 * {
   color: #a7a9be;
