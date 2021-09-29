@@ -144,7 +144,7 @@ import GearPage from "./GearPage.vue";
             >Runs: {{ stats.runs }} @ {{ stats.durs.toFixed(2) }}ms</va-alert
           >
           <va-alert>
-            <pre>{{ Queue.lastReport }}</pre>
+            <pre>{{ Queue.lastReport.value }}</pre>
           </va-alert>
           <p class="flex cen"><va-button @click="dps(runs)">DPS</va-button></p>
           <p class="flex cen">

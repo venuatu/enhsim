@@ -22,6 +22,5 @@ app.use(VuesticPlugin, {
 });
 app.mount("#app");
 
-// Queue.push({runs: 1, props: {}}).then(function (r) {
-//     console.log('report q', r);
-// })
+import State from "./sim/state";
+window.State = State;
