@@ -7,7 +7,7 @@ import { isWorker } from "../utils";
 
 let extraSpells: Record<string, Array<Spell>> = {
   "28830": [
-    { trigger: "physical", statHaste: 325, cd: 20, duration: 10, ppm: 1.3 },
+    { trigger: "physical", statHaste: 325, cd: 20, duration: 10, ppm: 1 },
   ],
   "30627": [
     {
@@ -35,6 +35,35 @@ let extraSpells: Record<string, Array<Spell>> = {
       cd: 50,
       chance: 0.1,
     },
+  ],
+  //TODO: implement refresh prev buff
+  "28439": [
+    { trigger: "physical", statHaste: 212, ppm: 1, duration: 10, cd: 10 },
+  ],
+  "28437": [
+    { trigger: "physical", statHaste: 212, ppm: 1, duration: 10, cd: 10 },
+  ],
+  "28438": [
+    { trigger: "physical", statHaste: 212, ppm: 1, duration: 10, cd: 10 },
+  ],
+  "27901": [
+    { trigger: "physical", statHaste: 132, ppm: 1.9, duration: 10, cd: 10 },
+  ],
+  "29962": [
+    {
+      trigger: "physical",
+      statAttackPower: 270,
+      ppm: 1.7,
+      duration: 10,
+      cd: 10,
+    },
+  ],
+  "29348": [
+    { trigger: "physical", statHaste: 180, ppm: 3, duration: 10, cd: 45 },
+  ],
+  //TODO: implement stack limits
+  "31331": [
+    { trigger: "physical", statArmorPen: 435, chance: 0.07, duration: 10 },
   ],
 };
 
