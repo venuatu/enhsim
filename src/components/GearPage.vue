@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref, watch, watchEffect } from "vue";
-import { chain } from "lodash";
+import { chain, map } from "lodash";
 import { gearById, gearBySlot, populateGear } from "../sim/item";
 import { Queue } from "../sim/queue";
 

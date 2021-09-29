@@ -1,4 +1,5 @@
 import { cloneDeep, flatten } from "lodash";
+import { ref } from "vue";
 import Worker from "../worker?worker";
 
 const WORKER_LOCATION = "src/worker.ts";
@@ -25,6 +26,7 @@ class TaskQueue {
   activeTasks: Record<string, object> = {};
 
   cores: number = navigator.hardwareConcurrency;
+  lastReport: any = ref({});
 
   push(e: Request) {
     if (!this.active) {
@@ -84,6 +86,7 @@ class TaskQueue {
     } else if (message.type === "response") {
       this.activeTasks[worker._id][1](message.data);
       delete this.activeTasks[worker._id];
+      this.lastReport.value = message.data[0];
     } else if (message.type === "error") {
       this.activeTasks[worker._id][2](message.data);
       delete this.activeTasks[worker._id];

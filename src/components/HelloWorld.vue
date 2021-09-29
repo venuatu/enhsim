@@ -69,7 +69,6 @@ function dps(runs) {
     stats.dpsStd = standardDeviation(map(reps, "dps")).toFixed(2);
     stats.durs = chain(reps).map("duration").mean().value();
     stats.runs = reps.length;
-    stats.lastReport = state.report();
     window.reps = reps;
   });
 }
@@ -97,7 +96,7 @@ function statValues(runs) {
     p.then(function (reps) {
       let dps = chain(reps).map("dps").mean().value();
       statReport[gem.name] = (dps - stats.dps) / N;
-      stats.lastReport = chain(statReport)
+      Queue.lastReport.value = chain(statReport)
         .map((v, k) => ({ n: k, v: v }))
         .sortBy("v")
         .reverse()
@@ -145,7 +144,7 @@ import GearPage from "./GearPage.vue";
             >Runs: {{ stats.runs }} @ {{ stats.durs.toFixed(2) }}ms</va-alert
           >
           <va-alert>
-            <pre>{{ stats.lastReport }}</pre>
+            <pre>{{ Queue.lastReport }}</pre>
           </va-alert>
           <p class="flex cen"><va-button @click="dps(runs)">DPS</va-button></p>
           <p class="flex cen">
