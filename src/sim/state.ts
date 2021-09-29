@@ -208,7 +208,12 @@ export default class State {
       }
 
       for (let b of this.baseBuffs) {
-        this.mergeStats(this.baseStats, b.stats);
+        if (b.expires) {
+          //these are not checked for expiry where the normal buffs are
+          this.buffs.push(b);
+        } else {
+          this.mergeStats(this.baseStats, b.stats);
+        }
       }
 
       for (let item of this.gear) {
