@@ -1,4 +1,4 @@
-import { forEach } from "lodash";
+import { assign, forEach } from "lodash";
 import State from "./sim/state";
 
 class WorkerState {
@@ -18,6 +18,7 @@ class WorkerState {
       let reps = [];
       for (let i = 0; i < data.runs; i++) {
         let state = new State();
+        assign(state.flags, data.flags);
         forEach(data.props, (v, k) => {
           if (Array.isArray(state[k])) {
             state[k] = state[k].concat(v);

@@ -4,10 +4,12 @@ import Worker from "../worker?worker";
 
 const WORKER_LOCATION = "src/worker.ts";
 
-class Request {
+class FullRequest {
   runs: number = 1000;
   props: Record<string, object>;
+  flags: any;
 }
+type Request = Partial<FullRequest>;
 
 interface WMessage {
   time: number;
@@ -23,8 +25,10 @@ class TaskQueue {
 
   cores: number = navigator.hardwareConcurrency * 0.75;
   lastReport: any = ref({});
+  flags: any;
 
-  push(e: Request) {
+  ensureWorkers() {
+    this.flags = JSON.parse(localStorage.enhsimFlags);
     if (!this.active) {
       this.active = true;
       while (this.workers.length < this.cores) {
@@ -39,6 +43,11 @@ class TaskQueue {
         this.workers.push(w);
       }
     }
+  }
+
+  push(e: Request) {
+    this.ensureWorkers();
+    e.flags = this.flags;
     return new Promise((resolve, reject) => {
       this.queue.push([e, resolve, reject]);
     });

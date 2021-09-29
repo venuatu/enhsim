@@ -1,4 +1,13 @@
-import { forEach, cloneDeep, chain, intersection, keys, map } from "lodash";
+import {
+  forEach,
+  cloneDeep,
+  chain,
+  intersection,
+  keys,
+  map,
+  isNumber,
+  clone,
+} from "lodash";
 import Action from "./action";
 import EarthShock from "./actions/earthshock";
 import FireNovaTotem from "./actions/firenovatotem";
@@ -30,11 +39,7 @@ export default class State {
   nextGCD: number = 0;
   time: number = 0;
 
-  baseBuffs: Array<Buff> = [].concat(
-    // SelfBuffs,
-    CommonBuffs,
-    Talents
-  );
+  baseBuffs: Array<Buff> = [].concat(Talents);
   buffs: Array<Buff> = [].concat();
   buffsDirty: boolean = true;
   expiredBuffs: Array<Buff> = [];
@@ -62,6 +67,7 @@ export default class State {
     tickMS: 50,
     log: false,
     armor: 7700,
+    buffs: "common",
   };
 
   actions = [
@@ -117,8 +123,11 @@ export default class State {
     forEach(uptime, (v, k) => {
       uptime[k] = v * 100; //.toFixed(0) + '%';
     });
+    let lastStats = clone(this.stats.target);
+    delete lastStats.target;
     return {
       dps,
+      lastStats,
       uptime,
       breakdownDps: dmgdps,
       duration: this.duration,
@@ -205,6 +214,12 @@ export default class State {
           if (!isWorker) console.log("setbonus", crossover, sb.name, sp);
           this.mergeStats(this.baseStats, sp);
         }
+      }
+
+      if (this.flags.buffs === "common") {
+        this.baseBuffs = this.baseBuffs.concat(CommonBuffs);
+      } else {
+        this.baseBuffs = this.baseBuffs.concat(SelfBuffs);
       }
 
       for (let b of this.baseBuffs) {

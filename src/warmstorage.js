@@ -1,3 +1,10 @@
+localStorage.enhsimFlags = JSON.stringify({
+  maxPhase: 2,
+  armor: 7700,
+  // parry: true,
+  // buffs: "self",
+});
+
 if (!localStorage.selectedGear) {
   localStorage.selectedGear =
     "[29924,29924,29994,30185,30039,29997,30052,30189,30190,30192,30017,30055,29383,38287,30106,30091]";

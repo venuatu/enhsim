@@ -123,13 +123,14 @@ let grp;
 export function populateGear() {
   if (gr) return Promise.resolve(true);
   if (grp) return grp;
+  let maxPhase = JSON.parse(localStorage.enhsimFlags).maxPhase;
   grp = fetch(gearUrl)
     .then((r) => {
       return r.json();
     })
     .then((items) => {
       for (const v of items) {
-        if (v.phase > 2) continue;
+        if (v.phase > maxPhase) continue;
         if (!gearBySlot[v.slot]) {
           gearBySlot[v.slot] = [];
         }
