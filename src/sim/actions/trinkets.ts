@@ -74,31 +74,9 @@ export default class Trinkets implements Action {
 
   spells: Record<string, Array<Spell>> = null;
 
-  procPhysical(state: State) {
-    let ps = this.spells["physical"];
-    if (!ps) return;
-    for (let i = 0; i < ps.length; i++) {
-      let sp = ps[i];
-      if (sp.nextUse && sp.nextUse >= state.time) continue;
-      if (sp.chance && Math.random() > sp.chance) continue;
-      let b = new Buff({
-        name: sp.name,
-        start: state.time,
-        expires: state.time + sp.duration * 1000,
-        stats: sp,
-      });
-      state.buffs.push(b);
-      // if (!isWorker) console.log("trinket procPhysical", b);
-      state.buffsDirty = true;
-      sp.nextUse = state.time + sp.cd * 1000;
-    }
-  }
-
-  procPhysicalCrit(state: State) {
-    let ps = this.spells["physicalCrit"];
-    if (!ps) return;
-    for (let i = 0; i < ps.length; i++) {
-      let sp = ps[i];
+  handleProc(state: State, spells: Array<Spell>) {
+    for (let i = 0; i < spells.length; i++) {
+      let sp = spells[i];
       if (sp.nextUse && sp.nextUse >= state.time) continue;
       if (sp.chance && Math.random() > sp.chance) continue;
       let b = new Buff({
@@ -114,9 +92,29 @@ export default class Trinkets implements Action {
     }
   }
 
-  procSpell(state: State) {}
+  procPhysical(state: State) {
+    let ps = this.spells["physical"];
+    if (!ps) return;
+    this.handleProc(state, ps);
+  }
 
-  procSpellCrit(state: State) {}
+  procPhysicalCrit(state: State) {
+    let ps = this.spells["physicalCrit"];
+    if (!ps) return;
+    this.handleProc(state, ps);
+  }
+
+  procSpell(state: State) {
+    let ps = this.spells["spell"];
+    if (!ps) return;
+    this.handleProc(state, ps);
+  }
+
+  procSpellCrit(state: State) {
+    let ps = this.spells["spellCrit"];
+    if (!ps) return;
+    this.handleProc(state, ps);
+  }
 
   run(state: State): boolean {
     if (this.spells === null) {
