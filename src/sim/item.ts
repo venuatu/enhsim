@@ -129,19 +129,7 @@ export function populateGear() {
     })
     .then((items) => {
       for (const v of items) {
-        if (v.ilvl <= 100) continue;
         if (v.phase > 2) continue;
-        if (v.availableclasses && (v.availableclasses & myclass) != myclass) {
-          continue;
-        }
-        let hasStat = false;
-        for (let x of goodprops) {
-          if (v[x.prop]) {
-            hasStat = true;
-            break;
-          }
-        }
-        if (!hasStat) continue;
         if (!gearBySlot[v.slot]) {
           gearBySlot[v.slot] = [];
         }
