@@ -4,7 +4,6 @@ import Buff from "../buff";
 import { gearById, Spell } from "../item";
 import State from "../state";
 import { isWorker } from "../utils";
-import WeaponMain, { decrementFlurry } from "./weaponmain";
 
 let extraSpells: Record<string, Array<Spell>> = {
   "28830": [
@@ -26,6 +25,15 @@ let extraSpells: Record<string, Array<Spell>> = {
       cd: 30,
       duration: 15,
       chance: 0.25,
+    },
+  ],
+  "28034": [
+    {
+      trigger: "physicalCrit",
+      statAttackPower: 300,
+      duration: 10,
+      cd: 50,
+      chance: 0.1,
     },
   ],
 };
@@ -51,7 +59,7 @@ export default class Trinkets implements Action {
         stats: sp,
       });
       state.buffs.push(b);
-      // if (!isWorker) console.log('trinket procPhysical', b);
+      // if (!isWorker) console.log("trinket procPhysical", b);
       state.buffsDirty = true;
       sp.nextUse = state.time + sp.cd * 1000;
     }
@@ -94,7 +102,7 @@ export default class Trinkets implements Action {
         for (let s of sps) {
           s = cloneDeep(s);
           let trig = s.trigger || "use";
-          s.name = item.name || "item " + it;
+          s.name = item.name || "item " + item.id;
           if (!this.spells[trig]) {
             this.spells[trig] = [];
           }

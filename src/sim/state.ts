@@ -221,6 +221,7 @@ export default class State {
           this.weapons.push(item);
         }
         this.mergeStats(this.baseStats, item);
+        this.mergeStats(this.baseStats, this.addedStats.target);
       }
       if (!isWorker) console.log(this.baseStats.target);
     }
@@ -231,7 +232,6 @@ export default class State {
     for (let buff of this.buffs) {
       this.applySpell(buff.stats);
     }
-    this.applySpell(this.addedStats.target);
     if (sts.kings) {
       sts.statCrit = sts.statCrit + sts.statCritKings;
       sts.statAttackPower = sts.statAttackPower + sts.statAttackPowerKings;
