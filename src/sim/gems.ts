@@ -307,33 +307,3 @@ export const AllGems = [
   Veiled,
   Wicked,
 ];
-
-export const ShiftingTan = new Buff({
-  name: "shif",
-  stats: { statAgility: 5 },
-});
-
-export const Pulsing = new Buff({
-  name: "pul",
-  stats: { statAttackPower: 10 },
-});
-export const Blades = new Buff({ name: "bla", stats: { statCrit: 12 } });
-
-export const SelectedGems = [
-  Blades,
-  Crimson,
-  Smooth,
-  Smooth,
-  Smooth,
-  Smooth,
-  Smooth,
-  Smooth,
-  Smooth,
-  Smooth,
-  Rigid,
-  Bold,
-  Pulsing,
-  Shifting,
-  ShiftingTan,
-  Shifting,
-];

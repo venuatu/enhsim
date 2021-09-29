@@ -33,8 +33,7 @@ export default class State {
   baseBuffs: Array<Buff> = [].concat(
     // SelfBuffs,
     CommonBuffs,
-    Talents,
-    SelectedGems
+    Talents
   );
   buffs: Array<Buff> = [].concat();
   buffsDirty: boolean = true;
