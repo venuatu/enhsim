@@ -65,6 +65,12 @@ let extraSpells: Record<string, Array<Spell>> = {
   "31331": [
     { trigger: "physical", statArmorPen: 435, chance: 0.07, duration: 10 },
   ],
+  "21670": [{ statArmorPen: 200 * 6, duration: 27, cd: 180 }],
+  "31856": [
+    { trigger: "physical", statAttackPower: 6 * 20, duration: 300, cd: 300 },
+    { trigger: "spell", statSpellDamage: 8 * 10, duration: 300, cd: 300 },
+  ],
+  //"31857": [{ statDMWrath: 1, duration: 300, cd: 300 }],
 };
 
 export default class Trinkets implements Action {
