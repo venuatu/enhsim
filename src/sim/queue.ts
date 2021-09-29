@@ -1,4 +1,4 @@
-import { cloneDeep, flatten } from "lodash";
+import { chain, cloneDeep, flatten, takeRight } from "lodash";
 import { ref } from "vue";
 import Worker from "../worker?worker";
 
@@ -9,10 +9,6 @@ class Request {
   props: Record<string, object>;
 }
 
-class WorkerWID extends Worker {
-  _id: string;
-}
-
 interface WMessage {
   time: number;
   type: string;
@@ -20,19 +16,19 @@ interface WMessage {
 }
 
 class TaskQueue {
-  workers: Array<WorkerWID> = [];
+  workers: Array<Worker> = [];
   queue: Array<object> = [];
   active: boolean = false;
   activeTasks: Record<string, object> = {};
 
-  cores: number = navigator.hardwareConcurrency;
+  cores: number = navigator.hardwareConcurrency * 0.75;
   lastReport: any = ref({});
 
   push(e: Request) {
     if (!this.active) {
       this.active = true;
       while (this.workers.length < this.cores) {
-        let w = new Worker(WORKER_LOCATION, { type: "module" }) as WorkerWID;
+        let w = new Worker(WORKER_LOCATION, { type: "module" }) as Worker;
         w._id = "" + this.workers.length;
         w.onmessage = (m) => this.workerMessage(w, m.data);
         w.postMessage({
@@ -60,11 +56,12 @@ class TaskQueue {
       );
     }
     return Promise.all(proms).then((r) => {
+      // this.publishReport(message.data);
       return flatten(r);
     });
   }
 
-  workerMessage(worker: WorkerWID, message: WMessage) {
+  workerMessage(worker: Worker, message: WMessage) {
     let now = Date.now();
     if (message.type === "request") {
       if (this.activeTasks[worker._id]) {
@@ -79,6 +76,7 @@ class TaskQueue {
       }
       let msg = this.queue.pop();
       this.activeTasks[worker._id] = msg;
+      worker.lastSent = Date.now();
       worker.postMessage({
         type: "newtask",
         data: msg[0],
@@ -86,11 +84,23 @@ class TaskQueue {
     } else if (message.type === "response") {
       this.activeTasks[worker._id][1](message.data);
       delete this.activeTasks[worker._id];
-      this.lastReport.value = message.data[0];
+      this.publishReport(message.data, Date.now() - worker.lastSent);
     } else if (message.type === "error") {
       this.activeTasks[worker._id][2](message.data);
       delete this.activeTasks[worker._id];
     }
+  }
+  etas: Array<number> = [];
+  publishReport(reps: Array<any>, dur: number) {
+    let remruns = chain(this.queue)
+      .map((m) => m[0].runs)
+      .sum()
+      .value();
+    let avg = dur / reps.length;
+    this.etas.push((remruns * avg) / this.cores / 1000);
+    this.etas = takeRight(this.etas, this.cores * 8);
+    reps[0].eta_seconds = chain(this.etas).mean().value();
+    this.lastReport.value = reps[0];
   }
 }
 export const Queue = new TaskQueue();
