@@ -1,6 +1,60 @@
-//@ts-ignore
-export const isWorker: boolean =
+import { max, sortBy } from "lodash";
+
+export const isWorker: boolean = //@ts-ignore
   typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+
+// https://github.com/30-seconds/30-seconds-of-code/blob/master/snippets/standardDeviation.md
+export function standardDeviation(
+  arr: Array<number>,
+  usePopulation: boolean = false
+): number {
+  const mean = arr.reduce((acc, val) => acc + val, 0) / arr.length;
+  return Math.sqrt(
+    arr
+      .reduce((acc, val) => acc.concat((val - mean) ** 2), [])
+      .reduce((acc, val) => acc + val, 0) /
+      (arr.length - (usePopulation ? 0 : 1))
+  );
+}
+
+export function histogram(
+  arr: Array<number>,
+  buckets: number = 0
+): Array<number> {
+  if (!buckets) {
+    // try to get buckets 4px wide
+    buckets = Math.floor((window.innerWidth * 0.2) / 4);
+  }
+  arr = sortBy(arr);
+  let min = arr[0];
+  let range = arr[arr.length - 1] - min;
+  let mod = range / buckets;
+  let out = new Array(buckets);
+  for (let i = 0; i < buckets; i++) out[i] = 0;
+
+  for (let n of arr) {
+    let buck = Math.floor((n - min) / mod);
+    out[buck] += 1;
+  }
+
+  let mx = max(out);
+  return out.map((x) => x / mx);
+}
+
+//https://gist.github.com/IceCreamYou/6ffa1b18c4c8f6aeaad2
+export function percentile(arr: Array<number>, p: number): number {
+  if (arr.length === 0) return 0;
+  if (p <= 0) return arr[0];
+  if (p >= 1) return arr[arr.length - 1];
+
+  var index = (arr.length - 1) * p,
+    lower = Math.floor(index),
+    upper = lower + 1,
+    weight = index % 1;
+
+  if (upper >= arr.length) return arr[lower];
+  return arr[lower] * (1 - weight) + arr[upper] * weight;
+}
 
 export const setBonuses = [
   {

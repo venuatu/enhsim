@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from "vue";
+import { reactive, watch } from "vue";
 import State from "../sim/state";
 import { gearById, populateGear } from "../sim/item";
 
@@ -10,26 +10,15 @@ let stats = reactive({
   dpsStd: 0,
   durs: 0,
   runs: 0,
-  lastReport: {},
+  lastReport: "",
   gemReport: null,
   processing: true,
 });
 
-// https://github.com/30-seconds/30-seconds-of-code/blob/master/snippets/standardDeviation.md
-const standardDeviation = (arr, usePopulation = false) => {
-  const mean = arr.reduce((acc, val) => acc + val, 0) / arr.length;
-  return Math.sqrt(
-    arr
-      .reduce((acc, val) => acc.concat((val - mean) ** 2), [])
-      .reduce((acc, val) => acc + val, 0) /
-      (arr.length - (usePopulation ? 0 : 1))
-  );
-};
-
 let runs = 50000;
 // const ostats = state.stats;
 
-import { chain, flatten, map, shuffle } from "lodash";
+import { chain, flatten, map, range, partial, isNumber } from "lodash";
 import { AllGems } from "../sim/gems";
 import { Queue } from "../sim/queue";
 
@@ -50,12 +39,6 @@ function dps(runs) {
     },
   }).then(function (reps) {
     stats.processing = false;
-    stats.dps = chain(reps).map("dps").mean().value().toFixed(2);
-    stats.dpsMin = chain(reps).map("dps").min().value().toFixed(0);
-    stats.dpsMax = chain(reps).map("dps").max().value().toFixed(0);
-    stats.dpsStd = standardDeviation(map(reps, "dps")).toFixed(2);
-    stats.durs = chain(reps).map("duration").mean().value();
-    stats.runs = reps.length;
     window.reps = reps;
   });
 }
@@ -100,6 +83,59 @@ function statValues(runs) {
   stats.processing = true;
 }
 
+let visibleProps = new Set([
+  "dps",
+  "dpsMax",
+  "dpsMin",
+  "dpsStd",
+  "duration",
+  "durationMin",
+  "durationMax",
+  "runs",
+  "dpsCurve",
+  "durationCurve",
+]);
+
+function formatNumber(v) {
+  if (Math.ceil(v) === v) {
+    return v;
+  } else {
+    return v.toFixed(4);
+  }
+}
+
+watch(Queue.lastReport, () => {
+  const stringCol = function (indent, v, k) {
+    if (visibleProps.has(k)) return "";
+    let ind = "";
+    for (let i = 0; i < indent; i++) ind += "    ";
+    let ov;
+    if (isNumber(v)) {
+      ov = formatNumber(v);
+    } else {
+      ov =
+        "\n" +
+        chain(v)
+          .map(partial(stringCol, indent + 1))
+          .sort()
+          .join("\n")
+          .value();
+    }
+    return ind + k + ": " + ov;
+  };
+  stats.lastReport = chain(Queue.lastReport.value)
+    .map(partial(stringCol, 0))
+    .filter()
+    .sort()
+    .join("\n")
+    .value();
+
+  for (let k of visibleProps) {
+    stats[k] = Queue.lastReport.value[k];
+    if (isNumber(stats[k])) stats[k] = stats[k].toFixed(2);
+  }
+});
+
 populateGear().then((x) => {
   dps(1000);
 });
@@ -118,11 +154,22 @@ import GearPage from "./GearPage.vue";
           stats.dpsMax
         }})</va-alert
       >
+      <svg class="dpschart" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <rect
+          v-for="(x, i) in stats.dpsCurve"
+          :key="i"
+          fill="rgb(204, 204, 204)"
+          :width="100 / stats.dpsCurve.length - 0.2"
+          :height="x * 100"
+          :y="(1 - x) * 100"
+          :x="i * (100 / stats.dpsCurve.length)"
+        />
+      </svg>
       <va-alert
         >Runs: {{ stats.runs }} @ {{ stats.durs.toFixed(2) }}ms</va-alert
       >
       <va-alert>
-        <pre>{{ Queue.lastReport.value }}</pre>
+        <pre>{{ stats.lastReport }}</pre>
       </va-alert>
       <va-alert v-if="stats.gemReport">
         <pre>{{ stats.gemReport }}</pre>
@@ -178,11 +225,13 @@ va-card {
   width: 20%;
   width: min(calc(100% - 20em), 80%);
 }
-#window,
-#app {
-}
 * {
   word-wrap: break-word;
+}
+.dpschart {
+  width: 100%;
+  height: 5rem;
+  /* height: 3rem; */
 }
 pre {
   width: 20em;

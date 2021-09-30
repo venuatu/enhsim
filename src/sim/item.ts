@@ -113,8 +113,8 @@ let goodprops = [
   { prop: "spells", name: "spell" },
 ];
 
+//@ts-ignore
 import gearUrl from "../gear.json?url";
-// const gearUrl = '/gear.json';
 
 let myclass = 64;
 let gr;

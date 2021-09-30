@@ -110,7 +110,7 @@ export default class State {
     let dps = dmg / secs;
     let dmgdps: Record<string, any> = {};
     for (let [k, v] of Object.entries(dmgSpells)) {
-      dmgdps[k] = (v / secs / dps) * 100; //.toFixed(2) + '%';
+      dmgdps[k] = v / secs / dps;
     }
 
     let uptime = {};
@@ -120,7 +120,7 @@ export default class State {
       uptime[b.name] = (uptime[b.name] || 0) + dur / this.maxTime;
     }
     forEach(uptime, (v, k) => {
-      uptime[k] = v * 100; //.toFixed(0) + '%';
+      uptime[k] = v; //.toFixed(0) + '%';
     });
     let lastStats = clone(this.stats.target);
     delete lastStats.target;
@@ -265,7 +265,7 @@ export default class State {
     // D11/(D11-22167.5+467.5*73)
     let arp = this.stats.statArmorPen;
     let armor = this.flags.armor - arp;
-    let reduction = armor / (armor - 22167.5 + 467.5 * 73);
+    let reduction = armor / (armor - 22167.5 + 467.5 * 70);
     this.stats.armorReduction = 1 - reduction;
     // if (!isWorker) console.log('arp', this.stats.armorReduction, arp);
     // debugger;

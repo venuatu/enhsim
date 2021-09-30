@@ -1,6 +1,21 @@
-import { chain, cloneDeep, flatten, takeRight } from "lodash";
+import {
+  chain,
+  cloneDeep,
+  flatten,
+  forEach,
+  isNumber,
+  keys,
+  max,
+  mean,
+  min,
+  sortBy,
+  takeRight,
+  times,
+} from "lodash";
 import { ref } from "vue";
+//@ts-ignore
 import Worker from "../worker?worker";
+import { histogram, percentile, standardDeviation } from "./utils";
 
 const WORKER_LOCATION = "src/worker.ts";
 
@@ -68,7 +83,9 @@ class TaskQueue {
     }
     return Promise.all(proms).then((r) => {
       // this.publishReport(message.data);
-      return flatten(r);
+      let reps = flatten(r);
+      this.publishReport(reps, chain(reps).map("duration").sum().value());
+      return reps;
     });
   }
 
@@ -103,7 +120,44 @@ class TaskQueue {
     }
   }
   etas: Array<number> = [];
+
+  mergeReports(reps: Array<any>): any {
+    let ret = {
+      runs: reps.length,
+    };
+    for (let x of reps) {
+      for (let k of keys(x)) {
+        let v = x[k];
+        if (isNumber(v)) {
+          if (!ret[k]) ret[k] = [];
+          ret[k].push(v);
+        } else {
+          if (!ret[k]) ret[k] = {};
+          for (let j of keys(v)) {
+            if (!ret[k][j]) ret[k][j] = [];
+            ret[k][j].push(v[j]);
+          }
+        }
+      }
+    }
+    forEach(ret, function mergeReports(v, k) {
+      if (Array.isArray(v)) {
+        ret[k + "Max"] = max(v);
+        ret[k + "Min"] = min(v);
+        ret[k + "Curve"] = histogram(v);
+        // ret[k + "Mean"] = mean(v);
+        // ret[k] = percentile(v, 0.5);
+        ret[k] = mean(v);
+      } else {
+        for (let j of keys(ret[k])) ret[k][j] = mean(ret[k][j]);
+      }
+    });
+    return ret;
+  }
+
   publishReport(reps: Array<any>, dur: number) {
+    let rep = this.mergeReports(reps);
+
     let remruns = chain(this.queue)
       .map((m) => m[0].runs)
       .sum()
@@ -111,8 +165,8 @@ class TaskQueue {
     let avg = dur / reps.length;
     this.etas.push((remruns * avg) / this.cores / 1000);
     this.etas = takeRight(this.etas, this.cores * 8);
-    reps[0].eta_seconds = chain(this.etas).mean().value();
-    this.lastReport.value = reps[0];
+    rep.etaSeconds = chain(this.etas).mean().value();
+    this.lastReport.value = rep;
   }
 }
 export const Queue = new TaskQueue();
