@@ -5,7 +5,6 @@ import {
   intersection,
   keys,
   map,
-  isNumber,
   clone,
 } from "lodash";
 import Action from "./action";

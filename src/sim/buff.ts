@@ -1,4 +1,3 @@
-import { Wicked } from "./gems";
 import Item from "./item";
 
 export default class Buff {

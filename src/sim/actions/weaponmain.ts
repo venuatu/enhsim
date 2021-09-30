@@ -1,7 +1,6 @@
 import Action from "../action";
 import { Flurry } from "../buff";
 import State from "../state";
-import { isWorker } from "../utils";
 
 export function decrementFlurry(state: State) {
   for (let b of state.buffs) {

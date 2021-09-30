@@ -8,9 +8,7 @@ import {
   max,
   mean,
   min,
-  sortBy,
   takeRight,
-  times,
 } from "lodash";
 import { ref } from "vue";
 //@ts-ignore

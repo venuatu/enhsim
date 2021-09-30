@@ -1,6 +1,5 @@
 <script setup>
 import { reactive, watch } from "vue";
-import State from "../sim/state";
 import { gearById, populateGear } from "../sim/item";
 
 let stats = reactive({
@@ -18,7 +17,7 @@ let stats = reactive({
 let runs = 50000;
 // const ostats = state.stats;
 
-import { chain, flatten, map, range, partial, isNumber } from "lodash";
+import { chain, map, partial, isNumber } from "lodash";
 import { AllGems } from "../sim/gems";
 import { Queue } from "../sim/queue";
 

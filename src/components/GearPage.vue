@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref, watch, watchEffect } from "vue";
+import { reactive, ref, watchEffect } from "vue";
 import { chain, map } from "lodash";
 import { gearById, gearBySlot, populateGear } from "../sim/item";
 import { Queue } from "../sim/queue";
@@ -43,7 +43,6 @@ let filters = [
   { name: "wrists", slots: ["wrists"] },
 ];
 
-let slots = chain(filters).map().value();
 let tab = ref(1);
 let data = ref([]);
 let dpsRankingsRaw = {};

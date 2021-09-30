@@ -1,9 +1,6 @@
 import Action from "../action";
 import State from "../state";
-import SearingTotem, {
-  ignoreFireTotems,
-  updateFireTotems,
-} from "./searingtotem";
+import SearingTotem, { updateFireTotems } from "./searingtotem";
 
 export default class FireNovaTotem implements Action {
   name = "totemfirenova";

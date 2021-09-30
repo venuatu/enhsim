@@ -1,6 +1,5 @@
 import Action from "../action";
 import State from "../state";
-import FlameShock from "./flameshock";
 
 const shockNames = new Set(["shockearth", "shockflame"]);
 export function updateShocks(state: State, nextTick: number) {

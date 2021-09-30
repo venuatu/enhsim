@@ -1,7 +1,7 @@
 import { chain, cloneDeep } from "lodash";
 import Action from "../action";
 import Buff from "../buff";
-import { gearById, Spell } from "../item";
+import { Spell } from "../item";
 import State from "../state";
 import { isWorker } from "../utils";
 
