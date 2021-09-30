@@ -7,7 +7,7 @@ let stats = reactive({
   dpsMax: 0,
   dpsMin: 0,
   dpsStd: 0,
-  durs: 0,
+  duration: 0,
   runs: 0,
   lastReport: "",
   gemReport: null,
@@ -164,9 +164,7 @@ import GearPage from "./GearPage.vue";
           :x="i * (100 / stats.dpsCurve.length)"
         />
       </svg>
-      <va-alert
-        >Runs: {{ stats.runs }} @ {{ stats.durs.toFixed(2) }}ms</va-alert
-      >
+      <va-alert>Runs: {{ stats.runs }} @ {{ stats.duration }}ms</va-alert>
       <va-alert>
         <pre>{{ stats.lastReport }}</pre>
       </va-alert>
