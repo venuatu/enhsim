@@ -13,7 +13,7 @@ export default class FlameShock implements Action {
     if (!mod) return true;
     let sp = state.stats.statSpellDamage;
     state.newHit(
-      mod * (377 + sp * 0.214) + (420 + 0.4 * sp),
+      mod * (377 + sp * (1.5 / 3.5)) + (420 + 0.4 * (12 / 15)),
       this.name,
       "fire"
     );

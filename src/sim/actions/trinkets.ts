@@ -71,6 +71,42 @@ let extraSpells: Record<string, Array<Spell>> = {
     { trigger: "spell", statSpellDamage: 8 * 10, duration: 300, cd: 300 },
   ],
   //"31857": [{ statDMWrath: 1, duration: 300, cd: 300 }],
+  "34427": [
+    {
+      trigger: "physical",
+      statAttackPower: 440,
+      chance: 0.1,
+      duration: 15,
+      cd: 45,
+    },
+  ],
+  "34429": [{ statSpellDamage: 320, duration: 15, cd: 90 }],
+  "32505": [{ statArmorPen: 300, ppm: 2, duration: 10 }],
+  "28789": [{ statSpellDamage: 300, ppm: 10 * 0.16, duration: 10 }], // 16% missing spell hit
+  "32488": [
+    { trigger: "spellCrit", statHasteSpell: 145, chance: 0.5, duration: 5 },
+  ],
+  "30626": [
+    {
+      trigger: "spellCrit",
+      statSpellDamage: 190,
+      chance: 0.2,
+      duration: 15,
+      cd: 45,
+    },
+  ],
+  "32491": [
+    { trigger: "stormstrike", statAttackPower: 275, chance: 0.5, duration: 10 },
+  ],
+  "34472": [
+    {
+      trigger: "physical",
+      statAttackPower: 300,
+      chance: 0.1,
+      duration: 20,
+      cd: 45,
+    },
+  ],
 };
 
 export default class Trinkets implements Action {

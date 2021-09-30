@@ -19,7 +19,8 @@ export default class EarthShock implements Action {
     let mod = state.cast();
     //TODO: stormstrike buff
     state.newHit(
-      mod * (661 + 35 * Math.random() + state.stats.statSpellDamage * 0.386),
+      mod *
+        (661 + 35 * Math.random() + state.stats.statSpellDamage * (1.5 / 3.5)),
       this.name,
       "nature"
     );

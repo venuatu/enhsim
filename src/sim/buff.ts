@@ -56,7 +56,26 @@ export const TrueshotAura = new Buff({
   name: "ta",
   stats: { statAttackPower: 120 },
 });
-// export const ExposeWeakness = new Buff({ name: 'ew', stats: { statAgility: ??? }});
+export const ExposeWeaknessP1 = new Buff({
+  name: "ew",
+  stats: { statAttackPower: ((757 + 107.5) * 1.1) / 4 },
+});
+export const ExposeWeaknessP2 = new Buff({
+  name: "ew",
+  stats: { statAttackPower: ((805 + 107.5) * 1.1) / 4 },
+});
+export const ExposeWeaknessP3 = new Buff({
+  name: "ew",
+  stats: { statAttackPower: ((839 + 107.5) * 1.1) / 4 },
+});
+export const ExposeWeaknessP4 = new Buff({
+  name: "ew",
+  stats: { statAttackPower: ((837 + 107.5) * 1.1) / 4 },
+});
+export const ExposeWeaknessP5 = new Buff({
+  name: "ew",
+  stats: { statAttackPower: ((927 + 107.5) * 1.1) / 4 },
+});
 
 export const ArcaneIntellect = new Buff({
   name: "ai",
@@ -176,6 +195,7 @@ export const CommonBuffs = [
   FerociousInspiration,
   FerociousInspiration,
   FerociousInspiration,
+  ExposeWeaknessP2,
   // TrueshotAura,
   // ExposeWeakness,
   ArcaneIntellect,

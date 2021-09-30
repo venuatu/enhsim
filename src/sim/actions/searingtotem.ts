@@ -42,7 +42,7 @@ export default class SearingTotem implements Action {
     let mod = state.cast();
     let sp = state.stats.statSpellDamage + state.stats.statAttackPower * 0.3;
     state.newHit(
-      mod * (50 + 16 * Math.random() + sp * 0.1667),
+      mod * (50 + 16 * Math.random() + sp * (3 / 15)),
       this.name,
       "fire"
     );

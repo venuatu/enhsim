@@ -312,29 +312,29 @@ export default class State {
         sts.statCrit = v / 22.08 / 100 + sts.statCrit;
         break;
       case "statExpertise":
-        sts.statExpertise = v / 14.7904396057 / 100 + sts.statExpertise;
+        sts.statExpertise = v / 15.7692 / 100 + sts.statExpertise;
         break;
       case "statHit":
-        sts.statHit = v / 15.76 / 100 + sts.statHit;
+        sts.statHit = v / 15.7692 / 100 + sts.statHit;
         break;
       case "statHaste":
-        sts.statHaste = v / 15.76 / 100 + sts.statHaste;
+        sts.statHaste = v / 15.7692 / 100 + sts.statHaste;
         break;
       case "statStrength":
         sts.statAttackPower = v * 2 + sts.statAttackPower;
         sts.statAttackPowerKings = v * 0.2 + sts.statAttackPowerKings;
         break;
       case "statHasteSpell":
-        sts.statHasteSpell = v / 15.76 / 100 + sts.statHasteSpell;
+        sts.statHasteSpell = v / 15.7692 / 100 + sts.statHasteSpell;
         break;
       case "statHitSpell":
-        sts.statHitSpell = v / 15.76 / 100 + sts.statHitSpell;
+        sts.statHitSpell = v / 12.62 / 100 + sts.statHitSpell;
         break;
       case "statCritSpell":
-        sts.statCritSpell = v / 15.76 / 100 + sts.statCritSpell;
+        sts.statCritSpell = v / 15.7692 / 100 + sts.statCritSpell;
         break;
       // case "statIncreaseSpeed":
-      //     sts.statIncreaseSpeed = v / 15.76 + sts.statIncreaseSpeed;
+      //     sts.statIncreaseSpeed = v / 15.7692 + sts.statIncreaseSpeed;
       //     break
       case "statStamina":
         sts.statStamina = v * 10 + sts.statStamina;
@@ -434,7 +434,7 @@ export default class State {
 
   swing(auto = false) {
     let rng = Math.random() - 0.01;
-    let hitmod = auto ? 0.26 : 0.08;
+    let hitmod = auto ? 0.27 : 0.08;
     rng -= Math.max(0, hitmod - this.stats.statHit);
     // if (!isWorker) console.log('statHit', Math.max(0, hitmod - this.stats.statHit))
     if (rng <= 0) {

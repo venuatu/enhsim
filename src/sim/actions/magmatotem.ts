@@ -20,7 +20,7 @@ export default class MagmaTotem implements Action {
     }
     let mod = state.cast();
     state.newHit(
-      mod * (97 + state.stats.statSpellDamage * 0.1), //todo
+      mod * (97 + state.stats.statSpellDamage * (2 / 15)), //todo
       this.name,
       "fire"
     );
